@@ -139,6 +139,37 @@
       margin: 8px 0 62px;
     }
 
+    .student-grid input {
+      border: none;
+      border-bottom: 1px solid #777;
+      outline: none;
+      font-size: 12px;
+      padding: 2px 4px;
+      width: 140px;
+      color: #333;
+      background: transparent;
+      font-family: Arial, Helvetica, sans-serif;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .student-grid input::placeholder {
+      color: #9a9a9a;
+      font-style: italic;
+    }
+
+    .student-grid input:focus {
+      border-bottom: 1px solid #1e88e5;
+    }
+
+    .student-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .95fr .85fr;
+      gap: 18px;
+      font-size: 12px;
+      margin: 8px 0 62px;
+    }
+
     .student-grid div:nth-child(1) {
       grid-column: 1 / -1;
     }
@@ -165,6 +196,31 @@
       margin: 0 0 6px;
     }
 
+    .motivo-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .motivo-line select {
+      flex: 1;
+      border: none;
+      border-bottom: 1px solid #777;
+      outline: none;
+      padding: 2px 4px;
+      font-size: 12.5px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #333;
+      background: transparent;
+    }
+
+    .auto-fill {
+      border-bottom: 1px dotted #777;
+      padding: 0 3px;
+      min-width: 24px;
+      display: inline-block;
+    }
+
     .sign-title {
       font-size: 12px;
       font-weight: 700;
@@ -185,6 +241,33 @@
       border-top: 1px solid var(--line);
       padding-top: 6px;
       min-height: 74px;
+    }
+
+    .signature-line .name {
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    .signature-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      text-align: center;
+      padding-top: 6px;
+      background: transparent;
+      font-size: 10px;
+      font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      color: #333;
+    }
+
+    .signature-input::placeholder {
+      color: #999;
+      text-transform: none;
+    }
+
+    .signature-input:focus {
+      border-top: 1px solid #1e88e5;
     }
 
     .signature-line .name {
@@ -277,19 +360,40 @@
       <h1>Advertência Escolar</h1>
 
       <section class="student-grid">
-        <div><span class="label">Discente:</span> ARTHUR OLIVEIRA FARIAS</div>
-        <div><span class="label">Série:</span> 7º ANO</div>
-        <div><span class="label">Turma:</span> 7º ANO B</div>
-        <div><span class="label">Turno:</span> Matutino</div>
+        <div>
+          <span class="label">Discente:</span>
+          <input type="text" id="discenteInput" placeholder="Digite o nome do discente" />
+        </div>
+
+        <div>
+          <span class="label">Série:</span>
+          <input type="text" placeholder="Ex: 7º ANO" />
+        </div>
+
+        <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
+          <span class="label">Turma:</span>
+          <input type="text" placeholder="Ex: 7º ANO B" />
+        </div>
+
+        <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
+          <span class="label">Turno:</span>
+          <input type="text" placeholder="Ex: Matutino" />
+        </div>
       </section>
 
       <section class="paragraph">
-        Fica o discente citado acima <strong>ADVERTIDO</strong> a partir desta data conforme <strong>REGIMENTO INTERNO</strong> desta Instituição Educacional, conforme Art. 283, INCISO II e este documento será adicionado à pasta do aluno.
+        Fica o discente citado acima <strong>ADVERTIDO</strong> a partir desta data conforme <strong>REGIMENTO INTERNO</strong> desta Instituição Educacional, conforme Art. 283, INCISO <strong><span id="incisoSelecionado" class="auto-fill">___</span></strong> e este documento será adicionado à pasta do aluno.
       </section>
 
       <section class="details">
-        <p><strong>Motivos:</strong> desrespeitar o colega;</p>
-        <p><strong>Obs:</strong> O aluno recebeu esta advertência por utilizar palavras ofensivas e xingamentos contra um colega durante a aula.</p>
+        <p class="motivo-line">
+          <strong>Motivos:</strong>
+          <select id="motivoSelect">
+            <option value="">Selecione a razão da advertência</option>
+          </select>
+        </p>
+
+        <p><strong>Obs:</strong> <textarea id="observacao" placeholder="Digite aqui a observação da advertência...">O aluno recebeu esta advertência por </textarea></p>
       </section>
 
       <section>
@@ -297,13 +401,12 @@
 
         <div class="signatures">
           <div class="signature-line">
-            <div class="name">ARTHUR OLIVEIRA FARIAS</div>
-            <div class="doc">718.305.921-90</div>
+            <div class="name" id="assinaturaAluno">______________________</div>
             <div class="role">Aluno(a)</div>
           </div>
 
           <div class="signature-line">
-            <div class="name">LEILA FERREIRA DE FARIAS</div>
+            <input type="text" id="responsavelInput" class="signature-input" placeholder="Nome do responsável" />
             <div class="role">Responsável(a)</div>
           </div>
 
@@ -312,16 +415,97 @@
           </div>
         </div>
       </section>
-
-      <div class="coordinator">COORDENADOR(A):</div>
-      <div class="date">segunda-feira, 18 de maio de 2026</div>
+      <div class="date" id="dataAtual"></div>
     </div>
 
     <footer>
       <div>Conti ® e-Assinatura: nHcz5Z58teX</div>
-      <div>Emitido em 18/05/2026 10:35 por 07549227152</div>
+      <div id="emitidoEm"></div>
       <div>Página 1 de 1</div>
     </footer>
   </main>
+  <script>
+    const motivosAdvertencia = [
+      { inciso: "I", motivo: "negligenciar ou descumprir qualquer ordem escolar" },
+      { inciso: "II", motivo: "desrespeitar os colegas, os professores e os demais funcionários da instituição" },
+      { inciso: "III", motivo: "retirar-se do espaço escolar sem a permissão/anuência do Coordenador Pedagógico ou do Gestor" },
+      { inciso: "IV", motivo: "participar das aulas/atividades escolares sem o uniforme escolar, salvo se comprovada a falta de condições financeiras para a aquisição do mesmo" },
+      { inciso: "V", motivo: "simular doença para esquivar-se do cumprimento das suas obrigações" },
+      { inciso: "VI", motivo: "usar aparelhos eletrônicos portáteis no espaço escolar, sem fins educacionais, salvo se autorizado pelo professor, no processo de ensino-aprendizagem" },
+      { inciso: "VII", motivo: "faltar à verdade" },
+      { inciso: "VIII", motivo: "ingressar na sala de aula, ou sair dela, sem a permissão do professor" },
+      { inciso: "IX", motivo: "promover ações que causem a desordem no contexto escolar" },
+      { inciso: "X", motivo: "portar armas, drogas, bebidas alcoólicas, artefatos explosivos ou qualquer substância e objeto que ofereça riscos à sua integridade física e a outros" },
+      { inciso: "XI", motivo: "usar bebida alcoólica, vender, comprar ou consumir drogas, e fumar no espaço escolar" },
+      { inciso: "XII", motivo: "entreter-se com atividades/afazeres alheios às atividades escolares" },
+      { inciso: "XIII", motivo: "participar de brincadeiras e jogos, ou desenvolver práticas que estimulem a violência, o ódio, a discriminação, o preconceito, o bullying, o suicídio, dentre outras práticas perigosas e discriminatórias" },
+      { inciso: "XIV", motivo: "extraviar ou danificar objetos pertencentes à instituição" },
+      { inciso: "XV", motivo: "ingressar nas dependências escolares de acesso restrito, salvo se autorizado" },
+      { inciso: "XVI", motivo: "causar danos ao patrimônio escolar" },
+      { inciso: "XVII", motivo: "difamar a instituição" },
+      { inciso: "XVIII", motivo: "utilizar computadores ou outros equipamentos/dispositivos de propriedade da escola, sem a autorização da autoridade competente" },
+      { inciso: "XIX", motivo: "comportar-se de maneira a perturbar o processo educativo, dentro ou fora da sala de aula" },
+      { inciso: "XX", motivo: "comparecer à escola sob efeito de substâncias nocivas à saúde e à convivência social" },
+      { inciso: "XXI", motivo: "apresentar qualquer conduta ofensiva ou agressiva às pessoas, e inadequada ao processo de ensino-aprendizagem" },
+      { inciso: "XXII", motivo: "usar boné, touca, capuz e máscara de fantasia/personagens nas dependências da instituição de ensino" },
+      { inciso: "XXIII", motivo: "namorar e/ou praticar atos sexuais no interior da instituição" },
+      { inciso: "XXIV", motivo: "frequentar a escola trajando roupas curtas e muito decotadas, ou sem alguma das vestimentas, como por exemplo, sem camisa/camiseta, etc." }
+    ];
+
+    const motivoSelect = document.getElementById("motivoSelect");
+    const discenteInput = document.getElementById("discenteInput");
+    const assinaturaAluno = document.getElementById("assinaturaAluno");
+    const incisoSelecionado = document.getElementById("incisoSelecionado");
+    const observacao = document.getElementById("observacao");
+    const dataAtual = document.getElementById("dataAtual");
+    const emitidoEm = document.getElementById("emitidoEm");
+
+    motivosAdvertencia.forEach((item, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = `${item.inciso} - ${item.motivo}`;
+      motivoSelect.appendChild(option);
+    });
+
+    discenteInput.addEventListener("input", () => {
+      const nome = discenteInput.value.trim();
+      assinaturaAluno.textContent = nome || "______________________";
+    });
+
+    function atualizarDatas() {
+      const agora = new Date();
+
+      const dataCompleta = agora.toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+      const dataHora = agora.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      dataAtual.textContent = dataCompleta;
+      emitidoEm.textContent = `Emitido em ${dataHora}`;
+    }
+
+    atualizarDatas();
+
+    motivoSelect.addEventListener("change", () => {
+      if (motivoSelect.value === "") {
+        incisoSelecionado.textContent = "___";
+        return;
+      }
+
+      const item = motivosAdvertencia[motivoSelect.value];
+      incisoSelecionado.textContent = item.inciso;
+      observacao.value = `O aluno recebeu esta advertência por ${item.motivo}.`;
+    });
+  </script>
 </body>
 </html>
