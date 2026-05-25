@@ -589,7 +589,9 @@
 
         const buffer = await resposta.arrayBuffer();
         const texto = new TextDecoder("iso-8859-1").decode(buffer);
-        const linhas = texto.split(/\r?\n/).filter(linha => linha.trim() !== "");
+        const linhas = texto.split(/
+?
+/).filter(linha => linha.trim() !== "");
 
         alunosCSV = linhas.slice(1).map(linha => {
           const [discente, responsavel, turno, serie, turma] = separarCSV(linha);
