@@ -196,6 +196,31 @@
       margin: 0 0 6px;
     }
 
+    .obs-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .obs-line strong {
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    #observacao {
+      flex: 1;
+      border: none;
+      outline: none;
+      resize: none;
+      background: transparent;
+      font-size: 12.5px;
+      line-height: 1.8;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      min-height: 90px;
+      overflow: hidden;
+    }
+
     .motivo-line {
       display: flex;
       align-items: center;
@@ -393,7 +418,10 @@
           </select>
         </p>
 
-        <p><strong>Obs:</strong> <textarea id="observacao" placeholder="Digite aqui a observação da advertência...">O aluno recebeu esta advertência por </textarea></p>
+        <div class="obs-line">
+          <strong>Obs:</strong>
+          <textarea id="observacao" placeholder="Digite aqui a observação da advertência...">O aluno recebeu esta advertência por </textarea>
+        </div>
       </section>
 
       <section>
@@ -419,7 +447,7 @@
     </div>
 
     <footer>
-      <div>Conti ® e-Assinatura: nHcz5Z58teX</div>
+      <div></div>
       <div id="emitidoEm"></div>
       <div>Página 1 de 1</div>
     </footer>
