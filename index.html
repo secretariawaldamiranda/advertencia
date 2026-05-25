@@ -110,6 +110,42 @@
 
     #discenteInput { width: 360px; }
 
+    .autocomplete-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .suggestions {
+      position: absolute;
+      left: 0;
+      top: 22px;
+      width: 360px;
+      max-height: 180px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid #cfcfcf;
+      border-radius: 4px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
+      z-index: 50;
+      display: none;
+    }
+
+    .suggestions.show { display: block; }
+
+    .suggestion-item {
+      padding: 7px 9px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #333;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.active {
+      background: #eef5ff;
+    }
+
     .label {
       font-weight: 700;
       margin-right: 5px;
@@ -284,8 +320,10 @@
       <section class="student-grid">
         <div>
           <span class="label">Discente:</span>
-          <input type="text" id="discenteInput" list="listaDiscentes" placeholder="Pesquise o nome do discente" />
-          <datalist id="listaDiscentes"></datalist>
+          <span class="autocomplete-wrap">
+            <input type="text" id="discenteInput" autocomplete="off" placeholder="Pesquise o nome do discente" />
+            <div id="sugestoesDiscentes" class="suggestions"></div>
+          </span>
         </div>
 
         <div>
@@ -382,7 +420,7 @@
 
     const motivoSelect = document.getElementById("motivoSelect");
     const discenteInput = document.getElementById("discenteInput");
-    const listaDiscentes = document.getElementById("listaDiscentes");
+    const sugestoesDiscentes = document.getElementById("sugestoesDiscentes");
     const serieInput = document.getElementById("serieInput");
     const turmaInput = document.getElementById("turmaInput");
     const turnoInput = document.getElementById("turnoInput");
@@ -453,13 +491,58 @@
       assinaturaAluno.textContent = aluno?.discente || "______________________";
     }
 
-    function montarListaDiscentes() {
-      listaDiscentes.innerHTML = "";
+    function obterSugestoes(nomeDigitado) {
+      const busca = normalizarTexto(nomeDigitado);
+      if (!busca) return [];
 
-      alunosCSV.forEach(aluno => {
-        const option = document.createElement("option");
-        option.value = aluno.discente;
-        listaDiscentes.appendChild(option);
+      return alunosCSV
+        .filter(aluno => normalizarTexto(aluno.discente).includes(busca))
+        .slice(0, 8);
+    }
+
+    let sugestaoAtiva = -1;
+
+    function fecharSugestoes() {
+      sugestoesDiscentes.classList.remove("show");
+      sugestoesDiscentes.innerHTML = "";
+      sugestaoAtiva = -1;
+    }
+
+    function selecionarAluno(aluno) {
+      if (!aluno) return;
+      discenteInput.value = aluno.discente;
+      preencherDadosDoAluno(aluno);
+      fecharSugestoes();
+    }
+
+    function mostrarSugestoes(nomeDigitado) {
+      const sugestoes = obterSugestoes(nomeDigitado);
+      sugestoesDiscentes.innerHTML = "";
+      sugestaoAtiva = -1;
+
+      if (!sugestoes.length) {
+        fecharSugestoes();
+        return;
+      }
+
+      sugestoes.forEach((aluno, index) => {
+        const item = document.createElement("div");
+        item.className = "suggestion-item";
+        item.textContent = aluno.discente;
+        item.addEventListener("mousedown", (event) => {
+          event.preventDefault();
+          selecionarAluno(aluno);
+        });
+        sugestoesDiscentes.appendChild(item);
+      });
+
+      sugestoesDiscentes.classList.add("show");
+    }
+
+    function atualizarSugestaoAtiva() {
+      const itens = sugestoesDiscentes.querySelectorAll(".suggestion-item");
+      itens.forEach((item, index) => {
+        item.classList.toggle("active", index === sugestaoAtiva);
       });
     }
 
@@ -477,7 +560,7 @@
           .map(mapearAlunoPorLinha)
           .filter(aluno => aluno.discente);
 
-        montarListaDiscentes();
+        // CSV carregado. As sugestões aparecem quando você começa a digitar.
       } catch (erro) {
         console.error(erro);
       }
@@ -492,14 +575,49 @@
     }
 
     discenteInput.addEventListener("input", () => {
-      const alunoEncontrado = procurarAluno(discenteInput.value);
+      const textoDigitado = discenteInput.value.trim();
+      const alunoExato = alunosCSV.find(aluno => normalizarTexto(aluno.discente) === normalizarTexto(textoDigitado));
 
-      if (alunoEncontrado) {
-        discenteInput.value = alunoEncontrado.discente;
-        preencherDadosDoAluno(alunoEncontrado);
+      if (alunoExato) {
+        preencherDadosDoAluno(alunoExato);
       } else {
-        preencherDadosDoAluno({ discente: discenteInput.value.trim() });
+        preencherDadosDoAluno({ discente: textoDigitado });
       }
+
+      mostrarSugestoes(textoDigitado);
+    });
+
+    discenteInput.addEventListener("keydown", (event) => {
+      const itens = sugestoesDiscentes.querySelectorAll(".suggestion-item");
+      if (!itens.length) return;
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        sugestaoAtiva = (sugestaoAtiva + 1) % itens.length;
+        atualizarSugestaoAtiva();
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        sugestaoAtiva = (sugestaoAtiva - 1 + itens.length) % itens.length;
+        atualizarSugestaoAtiva();
+      }
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const index = sugestaoAtiva >= 0 ? sugestaoAtiva : 0;
+        const nomeSelecionado = itens[index].textContent;
+        const aluno = alunosCSV.find(item => item.discente === nomeSelecionado);
+        selecionarAluno(aluno);
+      }
+
+      if (event.key === "Escape") {
+        fecharSugestoes();
+      }
+    });
+
+    discenteInput.addEventListener("blur", () => {
+      setTimeout(fecharSugestoes, 120);
     });
 
     function atualizarDatas() {
