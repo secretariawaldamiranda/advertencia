@@ -142,7 +142,7 @@
     .student-grid input,
     .student-grid select {
       border: none;
-      border-bottom: 1px solid #777;
+      
       outline: none;
       font-size: 12px;
       padding: 2px 4px;
@@ -165,7 +165,7 @@
 
     .student-grid input:focus,
     .student-grid select:focus {
-      border-bottom: 1px solid #1e88e5;
+      
     }
 
     .student-grid {
@@ -236,7 +236,7 @@
     .motivo-line select {
       flex: 1;
       border: none;
-      border-bottom: 1px solid #777;
+      
       outline: none;
       padding: 2px 4px;
       font-size: 12.5px;
@@ -543,7 +543,9 @@
 
         const buffer = await resposta.arrayBuffer();
         const texto = new TextDecoder("iso-8859-1").decode(buffer);
-        const linhas = texto.split(/\r?\n/).filter(linha => linha.trim() !== "");
+        const linhas = texto.split(/
+?
+/).filter(linha => linha.trim() !== "");
 
         alunosCSV = linhas.slice(1).map(linha => {
           const [discente, responsavel, turno, serie, turma] = linha.split(";");
