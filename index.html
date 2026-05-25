@@ -11,13 +11,9 @@
       --text: #4b4f58;
       --muted: #5f6670;
       --line: #555;
-      --blue: #4aa0d8;
-      --green: #92c64c;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -38,18 +34,7 @@
       overflow: hidden;
     }
 
-    .page::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0;
-    }
-
-    .content {
-      position: relative;
-      z-index: 1;
-    }
+    .content { position: relative; z-index: 1; }
 
     header {
       position: relative;
@@ -84,9 +69,7 @@
       mix-blend-mode: multiply;
     }
 
-    .school-info div {
-      margin: 1px 0;
-    }
+    .school-info div { margin: 1px 0; }
 
     h1 {
       margin: 18px 0 12px;
@@ -104,6 +87,8 @@
       font-size: 12px;
       margin: 8px 0 62px;
     }
+
+    .student-grid div:nth-child(1) { grid-column: 1 / -1; }
 
     .student-grid input {
       border: none;
@@ -123,20 +108,7 @@
       font-style: italic;
     }
 
-    .student-grid input:focus {
-    }
-
-    .student-grid {
-      display: grid;
-      grid-template-columns: 1.2fr .95fr .85fr;
-      gap: 18px;
-      font-size: 12px;
-      margin: 8px 0 62px;
-    }
-
-    .student-grid div:nth-child(1) {
-      grid-column: 1 / -1;
-    }
+    #discenteInput { width: 360px; }
 
     .label {
       font-weight: 700;
@@ -156,8 +128,23 @@
       margin-bottom: 125px;
     }
 
-    .details p {
-      margin: 0 0 6px;
+    .details p { margin: 0 0 6px; }
+
+    .motivo-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .motivo-line select {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 2px 4px;
+      font-size: 12.5px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #333;
+      background: transparent;
     }
 
     .obs-line {
@@ -183,23 +170,6 @@
       color: var(--text);
       min-height: 90px;
       overflow: hidden;
-    }
-
-    .motivo-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .motivo-line select {
-      flex: 1;
-      border: none;
-      outline: none;
-      padding: 2px 4px;
-      font-size: 12.5px;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #333;
-      background: transparent;
     }
 
     .auto-fill {
@@ -254,29 +224,9 @@
       text-transform: none;
     }
 
-    .signature-input:focus {
-      border-top: 1px solid #1e88e5;
-    }
-
-    .signature-line .name {
-      text-transform: uppercase;
-      margin-bottom: 15px;
-    }
-
-    .signature-line .doc,
     .signature-line .role {
       color: var(--muted);
       margin-top: 6px;
-    }
-
-    .coordinator {
-      width: 265px;
-      margin-left: auto;
-      margin-right: 0;
-      font-size: 10px;
-      text-align: left;
-      font-weight: 700;
-      margin-top: 4px;
     }
 
     .date {
@@ -303,26 +253,12 @@
       color: #62676f;
     }
 
-    footer div:nth-child(2) {
-      text-align: center;
-    }
-
-    footer div:nth-child(3) {
-      text-align: right;
-    }
+    footer div:nth-child(2) { text-align: center; }
+    footer div:nth-child(3) { text-align: right; }
 
     @media print {
-      body {
-        padding: 0;
-        background: #fff;
-      }
-
-      .page {
-        width: 210mm;
-        min-height: 297mm;
-        box-shadow: none;
-        margin: 0;
-      }
+      body { padding: 0; background: #fff; }
+      .page { width: 210mm; min-height: 297mm; box-shadow: none; margin: 0; }
     }
   </style>
 </head>
@@ -405,6 +341,7 @@
           </div>
         </div>
       </section>
+
       <div class="date" id="dataAtual"></div>
     </div>
 
@@ -414,128 +351,33 @@
       <div>Página 1 de 1</div>
     </footer>
   </main>
+
   <script>
     const motivosAdvertencia = [
-      {
-        inciso: "I",
-        motivo: "negligenciar ou descumprir qualquer ordem escolar",
-        obs: "O aluno deixou de cumprir orientações e normas estabelecidas pela instituição escolar, mesmo após orientação prévia da equipe pedagógica."
-      },
-      {
-        inciso: "II",
-        motivo: "desrespeitar os colegas, os professores e os demais funcionários da instituição",
-        obs: "O aluno apresentou comportamento desrespeitoso direcionado a colegas e/ou servidores da unidade escolar durante o período de aula."
-      },
-      {
-        inciso: "III",
-        motivo: "retirar-se do espaço escolar sem a permissão/anuência do Coordenador Pedagógico ou do Gestor",
-        obs: "O aluno saiu do ambiente escolar sem autorização prévia da coordenação ou da gestão da escola."
-      },
-      {
-        inciso: "IV",
-        motivo: "participar das aulas/atividades escolares sem o uniforme escolar",
-        obs: "O aluno compareceu à instituição sem o uso adequado do uniforme escolar exigido pela unidade."
-      },
-      {
-        inciso: "V",
-        motivo: "simular doença para esquivar-se do cumprimento das suas obrigações",
-        obs: "Foi identificado comportamento incompatível com a justificativa apresentada para ausência das atividades escolares."
-      },
-      {
-        inciso: "VI",
-        motivo: "usar aparelhos eletrônicos portáteis no espaço escolar sem fins educacionais",
-        obs: "O aluno utilizou aparelho eletrônico durante o horário de aula sem autorização do professor responsável."
-      },
-      {
-        inciso: "VII",
-        motivo: "faltar à verdade",
-        obs: "O aluno apresentou informações inverídicas relacionadas aos acontecimentos escolares."
-      },
-      {
-        inciso: "VIII",
-        motivo: "ingressar na sala de aula, ou sair dela, sem a permissão do professor",
-        obs: "O aluno entrou e/ou saiu da sala de aula sem autorização do professor responsável."
-      },
-      {
-        inciso: "IX",
-        motivo: "promover ações que causem a desordem no contexto escolar",
-        obs: "O aluno participou de atitudes que prejudicaram a organização e o bom andamento das atividades escolares."
-      },
-      {
-        inciso: "X",
-        motivo: "portar armas, drogas, bebidas alcoólicas, artefatos explosivos ou substâncias perigosas",
-        obs: "Foi identificado porte de material inadequado e proibido nas dependências escolares."
-      },
-      {
-        inciso: "XI",
-        motivo: "usar bebida alcoólica, vender, comprar ou consumir drogas, e fumar no espaço escolar",
-        obs: "O aluno foi identificado praticando conduta inadequada relacionada ao uso de substâncias proibidas no ambiente escolar."
-      },
-      {
-        inciso: "XII",
-        motivo: "entreter-se com atividades/afazeres alheios às atividades escolares",
-        obs: "O aluno permaneceu realizando atividades sem relação com o conteúdo e as orientações pedagógicas propostas em aula."
-      },
-      {
-        inciso: "XIII",
-        motivo: "participar de brincadeiras e jogos que estimulem violência, preconceito ou bullying",
-        obs: "O aluno participou de atitudes inadequadas envolvendo brincadeiras ofensivas e comportamento incompatível com a convivência escolar saudável."
-      },
-      {
-        inciso: "XIV",
-        motivo: "extraviar ou danificar objetos pertencentes à instituição",
-        obs: "Foi constatado dano e/ou desaparecimento de objeto pertencente à instituição escolar."
-      },
-      {
-        inciso: "XV",
-        motivo: "ingressar nas dependências escolares de acesso restrito sem autorização",
-        obs: "O aluno acessou área restrita da instituição sem autorização prévia da equipe responsável."
-      },
-      {
-        inciso: "XVI",
-        motivo: "causar danos ao patrimônio escolar",
-        obs: "O aluno provocou danos ao patrimônio da unidade escolar durante sua permanência na instituição."
-      },
-      {
-        inciso: "XVII",
-        motivo: "difamar a instituição",
-        obs: "O aluno realizou comentários e atitudes inadequadas que atingem a imagem da instituição escolar."
-      },
-      {
-        inciso: "XVIII",
-        motivo: "utilizar computadores ou equipamentos da escola sem autorização",
-        obs: "O aluno utilizou equipamentos pertencentes à escola sem autorização da equipe responsável."
-      },
-      {
-        inciso: "XIX",
-        motivo: "comportar-se de maneira a perturbar o processo educativo",
-        obs: "O comportamento apresentado pelo aluno prejudicou o desenvolvimento das atividades pedagógicas em sala de aula."
-      },
-      {
-        inciso: "XX",
-        motivo: "comparecer à escola sob efeito de substâncias nocivas",
-        obs: "O aluno apresentou comportamento incompatível com as normas escolares relacionado ao uso de substâncias inadequadas."
-      },
-      {
-        inciso: "XXI",
-        motivo: "apresentar conduta ofensiva ou agressiva às pessoas",
-        obs: "O aluno apresentou atitude ofensiva/agressiva durante a convivência escolar."
-      },
-      {
-        inciso: "XXII",
-        motivo: "usar boné, touca, capuz e máscara de fantasia/personagens",
-        obs: "O aluno permaneceu utilizando acessórios não permitidos nas dependências da instituição de ensino."
-      },
-      {
-        inciso: "XXIII",
-        motivo: "namorar e/ou praticar atos sexuais no interior da instituição",
-        obs: "O aluno apresentou comportamento inadequado ao ambiente escolar relacionado à convivência afetiva."
-      },
-      {
-        inciso: "XXIV",
-        motivo: "frequentar a escola com roupas inadequadas",
-        obs: "O aluno compareceu à instituição utilizando vestimenta inadequada ao ambiente escolar."
-      }
+      { inciso: "I", motivo: "negligenciar ou descumprir qualquer ordem escolar", obs: "O aluno deixou de cumprir orientações e normas estabelecidas pela instituição escolar, mesmo após orientação prévia da equipe pedagógica." },
+      { inciso: "II", motivo: "desrespeitar os colegas, os professores e os demais funcionários da instituição", obs: "O aluno apresentou comportamento desrespeitoso direcionado a colegas e/ou servidores da unidade escolar durante o período de aula." },
+      { inciso: "III", motivo: "retirar-se do espaço escolar sem a permissão/anuência do Coordenador Pedagógico ou do Gestor", obs: "O aluno saiu do ambiente escolar sem autorização prévia da coordenação ou da gestão da escola." },
+      { inciso: "IV", motivo: "participar das aulas/atividades escolares sem o uniforme escolar", obs: "O aluno compareceu à instituição sem o uso adequado do uniforme escolar exigido pela unidade." },
+      { inciso: "V", motivo: "simular doença para esquivar-se do cumprimento das suas obrigações", obs: "Foi identificado comportamento incompatível com a justificativa apresentada para ausência das atividades escolares." },
+      { inciso: "VI", motivo: "usar aparelhos eletrônicos portáteis no espaço escolar sem fins educacionais", obs: "O aluno utilizou aparelho eletrônico durante o horário de aula sem autorização do professor responsável." },
+      { inciso: "VII", motivo: "faltar à verdade", obs: "O aluno apresentou informações inverídicas relacionadas aos acontecimentos escolares." },
+      { inciso: "VIII", motivo: "ingressar na sala de aula, ou sair dela, sem a permissão do professor", obs: "O aluno entrou e/ou saiu da sala de aula sem autorização do professor responsável." },
+      { inciso: "IX", motivo: "promover ações que causem a desordem no contexto escolar", obs: "O aluno participou de atitudes que prejudicaram a organização e o bom andamento das atividades escolares." },
+      { inciso: "X", motivo: "portar armas, drogas, bebidas alcoólicas, artefatos explosivos ou substâncias perigosas", obs: "Foi identificado porte de material inadequado e proibido nas dependências escolares." },
+      { inciso: "XI", motivo: "usar bebida alcoólica, vender, comprar ou consumir drogas, e fumar no espaço escolar", obs: "O aluno foi identificado praticando conduta inadequada relacionada ao uso de substâncias proibidas no ambiente escolar." },
+      { inciso: "XII", motivo: "entreter-se com atividades/afazeres alheios às atividades escolares", obs: "O aluno permaneceu realizando atividades sem relação com o conteúdo e as orientações pedagógicas propostas em aula." },
+      { inciso: "XIII", motivo: "participar de brincadeiras e jogos que estimulem violência, preconceito ou bullying", obs: "O aluno participou de atitudes inadequadas envolvendo brincadeiras ofensivas e comportamento incompatível com a convivência escolar saudável." },
+      { inciso: "XIV", motivo: "extraviar ou danificar objetos pertencentes à instituição", obs: "Foi constatado dano e/ou desaparecimento de objeto pertencente à instituição escolar." },
+      { inciso: "XV", motivo: "ingressar nas dependências escolares de acesso restrito sem autorização", obs: "O aluno acessou área restrita da instituição sem autorização prévia da equipe responsável." },
+      { inciso: "XVI", motivo: "causar danos ao patrimônio escolar", obs: "O aluno provocou danos ao patrimônio da unidade escolar durante sua permanência na instituição." },
+      { inciso: "XVII", motivo: "difamar a instituição", obs: "O aluno realizou comentários e atitudes inadequadas que atingem a imagem da instituição escolar." },
+      { inciso: "XVIII", motivo: "utilizar computadores ou equipamentos da escola sem autorização", obs: "O aluno utilizou equipamentos pertencentes à escola sem autorização da equipe responsável." },
+      { inciso: "XIX", motivo: "comportar-se de maneira a perturbar o processo educativo", obs: "O comportamento apresentado pelo aluno prejudicou o desenvolvimento das atividades pedagógicas em sala de aula." },
+      { inciso: "XX", motivo: "comparecer à escola sob efeito de substâncias nocivas", obs: "O aluno apresentou comportamento incompatível com as normas escolares relacionado ao uso de substâncias inadequadas." },
+      { inciso: "XXI", motivo: "apresentar conduta ofensiva ou agressiva às pessoas", obs: "O aluno apresentou atitude ofensiva/agressiva durante a convivência escolar." },
+      { inciso: "XXII", motivo: "usar boné, touca, capuz e máscara de fantasia/personagens", obs: "O aluno permaneceu utilizando acessórios não permitidos nas dependências da instituição de ensino." },
+      { inciso: "XXIII", motivo: "namorar e/ou praticar atos sexuais no interior da instituição", obs: "O aluno apresentou comportamento inadequado ao ambiente escolar relacionado à convivência afetiva." },
+      { inciso: "XXIV", motivo: "frequentar a escola com roupas inadequadas", obs: "O aluno compareceu à instituição utilizando vestimenta inadequada ao ambiente escolar." }
     ];
 
     const motivoSelect = document.getElementById("motivoSelect");
@@ -551,17 +393,56 @@
     const dataAtual = document.getElementById("dataAtual");
     const emitidoEm = document.getElementById("emitidoEm");
 
-    motivosAdvertencia.forEach((item, index) => {
-      const option = document.createElement("option");
-      option.value = index;
-      option.textContent = `${item.inciso} - ${item.motivo}`;
-      motivoSelect.appendChild(option);
-    });
-
     let alunosCSV = [];
 
+    function normalizarTexto(texto) {
+      return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toUpperCase();
+    }
+
     function separarCSV(linha) {
-      return linha.split(";").map(campo => campo.trim().replace(/^"|"$/g, ""));
+      const campos = [];
+      let campoAtual = "";
+      let dentroDeAspas = false;
+
+      for (let i = 0; i < linha.length; i++) {
+        const caractere = linha[i];
+        const proximo = linha[i + 1];
+
+        if (caractere === '"' && proximo === '"') {
+          campoAtual += '"';
+          i++;
+        } else if (caractere === '"') {
+          dentroDeAspas = !dentroDeAspas;
+        } else if (caractere === ";" && !dentroDeAspas) {
+          campos.push(campoAtual.trim());
+          campoAtual = "";
+        } else {
+          campoAtual += caractere;
+        }
+      }
+
+      campos.push(campoAtual.trim());
+      return campos;
+    }
+
+    function textoParaLinhas(texto) {
+      return String(texto || "").split(/\r?\n/).filter(linha => linha.trim() !== "");
+    }
+
+    function mapearAlunoPorLinha(linha) {
+      const [discente, responsavel, turno, serie, turma] = separarCSV(linha);
+
+      return {
+        discente: discente || "",
+        responsavel: responsavel || "",
+        turno: turno || "",
+        serie: serie || "",
+        turma: turma || ""
+      };
     }
 
     function preencherDadosDoAluno(aluno) {
@@ -589,21 +470,12 @@
 
         const buffer = await resposta.arrayBuffer();
         const texto = new TextDecoder("iso-8859-1").decode(buffer);
-        const linhas = texto.split(/
-?
-/).filter(linha => linha.trim() !== "");
+        const linhas = textoParaLinhas(texto);
 
-        alunosCSV = linhas.slice(1).map(linha => {
-          const [discente, responsavel, turno, serie, turma] = separarCSV(linha);
-
-          return {
-            discente: discente || "",
-            responsavel: responsavel || "",
-            turno: turno || "",
-            serie: serie || "",
-            turma: turma || ""
-          };
-        }).filter(aluno => aluno.discente);
+        alunosCSV = linhas
+          .slice(1)
+          .map(mapearAlunoPorLinha)
+          .filter(aluno => aluno.discente);
 
         montarListaDiscentes();
       } catch (erro) {
@@ -611,18 +483,24 @@
       }
     }
 
+    function procurarAluno(nomeDigitado) {
+      const busca = normalizarTexto(nomeDigitado);
+      if (!busca) return null;
+
+      return alunosCSV.find(aluno => normalizarTexto(aluno.discente) === busca) ||
+             alunosCSV.find(aluno => normalizarTexto(aluno.discente).includes(busca));
+    }
+
     discenteInput.addEventListener("input", () => {
-      const nomeDigitado = discenteInput.value.trim().toUpperCase();
-      const alunoEncontrado = alunosCSV.find(aluno => aluno.discente.toUpperCase() === nomeDigitado);
+      const alunoEncontrado = procurarAluno(discenteInput.value);
 
       if (alunoEncontrado) {
+        discenteInput.value = alunoEncontrado.discente;
         preencherDadosDoAluno(alunoEncontrado);
       } else {
         preencherDadosDoAluno({ discente: discenteInput.value.trim() });
       }
     });
-
-    carregarCSVAutomatico();
 
     function atualizarDatas() {
       const agora = new Date();
@@ -646,7 +524,12 @@
       emitidoEm.textContent = `Emitido em ${dataHora}`;
     }
 
-    atualizarDatas();
+    motivosAdvertencia.forEach((item, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = `${item.inciso} - ${item.motivo}`;
+      motivoSelect.appendChild(option);
+    });
 
     motivoSelect.addEventListener("change", () => {
       if (motivoSelect.value === "") {
@@ -658,6 +541,25 @@
       incisoSelecionado.textContent = item.inciso;
       observacao.value = item.obs;
     });
+
+    function executarTestesBasicos() {
+      const linhasTeste = textoParaLinhas("DISCENTE;RESPONSAVEL;TURNO;SERIE;TURMA\nALUNO TESTE;RESP TESTE;Matutino;7º ANO;B");
+      console.assert(linhasTeste.length === 2, "Teste: textoParaLinhas deve separar cabeçalho e aluno.");
+
+      const alunoTeste = mapearAlunoPorLinha("ALUNO TESTE;RESP TESTE;Matutino;7º ANO;B");
+      console.assert(alunoTeste.discente === "ALUNO TESTE", "Teste: discente deve ser lido do CSV.");
+      console.assert(alunoTeste.responsavel === "RESP TESTE", "Teste: responsável deve ser lido do CSV.");
+      console.assert(alunoTeste.turno === "Matutino", "Teste: turno deve ser lido do CSV.");
+      console.assert(alunoTeste.serie === "7º ANO", "Teste: série deve ser lida do CSV.");
+      console.assert(alunoTeste.turma === "B", "Teste: turma deve ser lida do CSV.");
+
+      const camposComAspas = separarCSV('ALUNO;"RESP; COM PONTO E VÍRGULA";Vespertino;8º ANO;C');
+      console.assert(camposComAspas[1] === "RESP; COM PONTO E VÍRGULA", "Teste: CSV com aspas deve preservar ponto e vírgula interno.");
+    }
+
+    executarTestesBasicos();
+    carregarCSVAutomatico();
+    atualizarDatas();
   </script>
 </body>
 </html>
