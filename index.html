@@ -105,8 +105,7 @@
       margin: 8px 0 62px;
     }
 
-    .student-grid input,
-    .student-grid select {
+    .student-grid input {
       border: none;
       outline: none;
       font-size: 12px;
@@ -117,15 +116,6 @@
       font-family: Arial, Helvetica, sans-serif;
       display: inline-block;
       vertical-align: middle;
-    }
-
-    .student-grid input::placeholder {
-      color: #9a9a9a;
-      font-style: italic;
-    }
-
-    .student-grid select {
-      min-width: 360px;
     }
 
     .student-grid input::placeholder {
@@ -358,9 +348,8 @@
       <section class="student-grid">
         <div>
           <span class="label">Discente:</span>
-          <select id="discenteSelect">
-            <option value="">Carregando alunos...</option>
-          </select>
+          <input type="text" id="discenteInput" list="listaDiscentes" placeholder="Pesquise o nome do discente" />
+          <datalist id="listaDiscentes"></datalist>
         </div>
 
         <div>
@@ -370,7 +359,7 @@
 
         <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
           <span class="label">Turma:</span>
-          <input type="text" id="turmaInput" placeholder="Ex: 7º ANO B" />
+          <input type="text" id="turmaInput" placeholder="Ex: A" />
         </div>
 
         <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
@@ -550,7 +539,8 @@
     ];
 
     const motivoSelect = document.getElementById("motivoSelect");
-    const discenteSelect = document.getElementById("discenteSelect");
+    const discenteInput = document.getElementById("discenteInput");
+    const listaDiscentes = document.getElementById("listaDiscentes");
     const serieInput = document.getElementById("serieInput");
     const turmaInput = document.getElementById("turmaInput");
     const turnoInput = document.getElementById("turnoInput");
@@ -574,43 +564,32 @@
       return linha.split(";").map(campo => campo.trim().replace(/^"|"$/g, ""));
     }
 
-    function limparAluno() {
-      serieInput.value = "";
-      turmaInput.value = "";
-      turnoInput.value = "";
-      responsavelInput.value = "";
-      assinaturaAluno.textContent = "______________________";
+    function preencherDadosDoAluno(aluno) {
+      serieInput.value = aluno?.serie || "";
+      turmaInput.value = aluno?.turma || "";
+      turnoInput.value = aluno?.turno || "";
+      responsavelInput.value = aluno?.responsavel || "";
+      assinaturaAluno.textContent = aluno?.discente || "______________________";
     }
 
-    function preencherAluno(aluno) {
-      serieInput.value = aluno.serie || "";
-      turmaInput.value = aluno.turma || "";
-      turnoInput.value = aluno.turno || "";
-      responsavelInput.value = aluno.responsavel || "";
-      assinaturaAluno.textContent = aluno.discente || "______________________";
-    }
+    function montarListaDiscentes() {
+      listaDiscentes.innerHTML = "";
 
-    function montarListaDeAlunos() {
-      discenteSelect.innerHTML = '<option value="">Selecione o aluno</option>';
-
-      alunosCSV.forEach((aluno, index) => {
+      alunosCSV.forEach(aluno => {
         const option = document.createElement("option");
-        option.value = index;
-        option.textContent = aluno.discente;
-        discenteSelect.appendChild(option);
+        option.value = aluno.discente;
+        listaDiscentes.appendChild(option);
       });
     }
 
-    async function carregarCSV() {
+    async function carregarCSVAutomatico() {
       try {
         const resposta = await fetch("advertencia.csv");
-        if (!resposta.ok) throw new Error("Não encontrei o arquivo advertencia.csv na mesma pasta do index.html.");
+        if (!resposta.ok) throw new Error("Arquivo advertencia.csv não encontrado na mesma pasta do index.html.");
 
         const buffer = await resposta.arrayBuffer();
         const texto = new TextDecoder("iso-8859-1").decode(buffer);
-        const linhas = texto.split(/
-?
-/).filter(linha => linha.trim() !== "");
+        const linhas = texto.split(/\r?\n/).filter(linha => linha.trim() !== "");
 
         alunosCSV = linhas.slice(1).map(linha => {
           const [discente, responsavel, turno, serie, turma] = separarCSV(linha);
@@ -624,25 +603,24 @@
           };
         }).filter(aluno => aluno.discente);
 
-        montarListaDeAlunos();
+        montarListaDiscentes();
       } catch (erro) {
         console.error(erro);
-        discenteSelect.innerHTML = '<option value="">CSV não encontrado</option>';
       }
     }
 
-    discenteSelect.addEventListener("change", () => {
-      const aluno = alunosCSV[discenteSelect.value];
+    discenteInput.addEventListener("input", () => {
+      const nomeDigitado = discenteInput.value.trim().toUpperCase();
+      const alunoEncontrado = alunosCSV.find(aluno => aluno.discente.toUpperCase() === nomeDigitado);
 
-      if (!aluno) {
-        limparAluno();
-        return;
+      if (alunoEncontrado) {
+        preencherDadosDoAluno(alunoEncontrado);
+      } else {
+        preencherDadosDoAluno({ discente: discenteInput.value.trim() });
       }
-
-      preencherAluno(aluno);
     });
 
-    carregarCSV();
+    carregarCSVAutomatico();
 
     function atualizarDatas() {
       const agora = new Date();
