@@ -496,7 +496,28 @@
       if (!busca) return [];
 
       return alunosCSV
-        .filter(aluno => normalizarTexto(aluno.discente).includes(busca))
+        .map(aluno => {
+          const nomeNormalizado = normalizarTexto(aluno.discente);
+          const partesDoNome = nomeNormalizado.split(" ").filter(Boolean);
+
+          let prioridade = 999;
+
+          if (nomeNormalizado.startsWith(busca)) {
+            prioridade = 1;
+          } else if (partesDoNome.some(parte => parte.startsWith(busca))) {
+            prioridade = 2;
+          } else if (nomeNormalizado.includes(busca)) {
+            prioridade = 3;
+          }
+
+          return { aluno, prioridade };
+        })
+        .filter(item => item.prioridade !== 999)
+        .sort((a, b) => {
+          if (a.prioridade !== b.prioridade) return a.prioridade - b.prioridade;
+          return a.aluno.discente.localeCompare(b.aluno.discente, "pt-BR");
+        })
+        .map(item => item.aluno)
         .slice(0, 8);
     }
 
@@ -673,6 +694,20 @@
 
       const camposComAspas = separarCSV('ALUNO;"RESP; COM PONTO E VÍRGULA";Vespertino;8º ANO;C');
       console.assert(camposComAspas[1] === "RESP; COM PONTO E VÍRGULA", "Teste: CSV com aspas deve preservar ponto e vírgula interno.");
+
+      const alunosOriginais = alunosCSV;
+      alunosCSV = [
+        { discente: "MARIA FERNANDA" },
+        { discente: "FELIPE ALMEIDA" },
+        { discente: "ANA FLÁVIA" },
+        { discente: "JOÃO SOFIA" }
+      ];
+
+      const sugestoesF = obterSugestoes("F").map(aluno => aluno.discente);
+      console.assert(sugestoesF[0] === "FELIPE ALMEIDA", "Teste: nomes que começam com a letra buscada devem aparecer primeiro.");
+      console.assert(sugestoesF.includes("MARIA FERNANDA"), "Teste: nomes com segunda parte começando com a busca também devem aparecer.");
+
+      alunosCSV = alunosOriginais;
     }
 
     executarTestesBasicos();
