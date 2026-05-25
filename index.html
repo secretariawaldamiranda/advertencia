@@ -321,12 +321,40 @@
     }
 
     @media print {
-      .print-button {
-        display: none;
+      @page {
+        size: A4;
+        margin: 0;
       }
 
-      body { padding: 0; background: #fff; }
-      .page { width: 210mm; min-height: 297mm; box-shadow: none; margin: 0; }
+      body {
+        padding: 0;
+        margin: 0;
+        background: #fff;
+      }
+
+      body * {
+        visibility: hidden;
+      }
+
+      .page,
+      .page * {
+        visibility: visible;
+      }
+
+      .page {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        box-shadow: none;
+      }
+
+      .print-button,
+      .suggestions {
+        display: none !important;
+      }
     }
   </style>
 </head>
