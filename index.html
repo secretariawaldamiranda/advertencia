@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advertência Escolar</title>
+  <style>
+    :root {
+      --paper-width: 794px;
+      --paper-height: 1123px;
+      --text: #4b4f58;
+      --muted: #5f6670;
+      --line: #555;
+      --blue: #4aa0d8;
+      --green: #92c64c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #e9e9e9;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+    }
+
+    .page {
+      position: relative;
+      width: var(--paper-width);
+      min-height: var(--paper-height);
+      margin: 0 auto;
+      background: #fff;
+      padding: 92px 54px 58px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 5%, rgba(0,0,0,.05) 0 1px, transparent 2px),
+        radial-gradient(circle at 91% 8%, rgba(0,0,0,.07) 0 1px, transparent 2px),
+        radial-gradient(circle at 8% 84%, rgba(0,0,0,.05) 0 1px, transparent 2px),
+        linear-gradient(90deg, transparent 0 98%, rgba(0,0,0,.06));
+      pointer-events: none;
+      opacity: .55;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      position: relative;
+      text-align: center;
+      font-weight: 700;
+      color: #4f5662;
+      line-height: 1.08;
+      text-transform: uppercase;
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      position: absolute;
+      left: -40px;
+      top: -22px;
+      width: 118px;
+      text-align: center;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: .95;
+    }
+
+    .tree {
+      width: 78px;
+      height: 42px;
+      margin: 0 auto 4px;
+      position: relative;
+    }
+
+    .tree::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 4px;
+      width: 46px;
+      height: 24px;
+      background: var(--green);
+      border-radius: 50% 55% 48% 45%;
+      box-shadow: -18px 8px 0 -3px var(--green), 17px 9px 0 -5px var(--green);
+    }
+
+    .tree::after {
+      content: "";
+      position: absolute;
+      left: 39px;
+      top: 25px;
+      width: 7px;
+      height: 17px;
+      background: #7c8b45;
+      border-radius: 2px;
+    }
+
+    .logo .small {
+      font-size: 8px;
+      letter-spacing: .2px;
+    }
+
+    .logo .city {
+      font-size: 20px;
+      letter-spacing: .3px;
+    }
+
+    .school-info div {
+      margin: 1px 0;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      text-align: center;
+      font-size: 16px;
+      color: #4c535d;
+      text-transform: uppercase;
+      letter-spacing: .2px;
+    }
+
+    .student-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .95fr .85fr;
+      gap: 18px;
+      font-size: 12px;
+      margin: 8px 0 62px;
+    }
+
+    .student-grid div:nth-child(1) {
+      grid-column: 1 / -1;
+    }
+
+    .label {
+      font-weight: 700;
+      margin-right: 5px;
+    }
+
+    .paragraph {
+      font-size: 12.5px;
+      line-height: 1.85;
+      text-align: justify;
+      margin-bottom: 33px;
+    }
+
+    .details {
+      font-size: 12.5px;
+      line-height: 1.8;
+      margin-bottom: 125px;
+    }
+
+    .details p {
+      margin: 0 0 6px;
+    }
+
+    .sign-title {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 42px;
+    }
+
+    .signatures {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 50px;
+      align-items: start;
+      font-size: 10px;
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .signature-line {
+      border-top: 1px solid var(--line);
+      padding-top: 6px;
+      min-height: 74px;
+    }
+
+    .signature-line .name {
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    .signature-line .doc,
+    .signature-line .role {
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .coordinator {
+      width: 265px;
+      margin-left: auto;
+      margin-right: 0;
+      font-size: 10px;
+      text-align: left;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .date {
+      width: 265px;
+      margin-left: auto;
+      margin-right: 0;
+      margin-top: 28px;
+      font-size: 10px;
+      text-align: right;
+      color: #4e5660;
+      font-weight: 700;
+    }
+
+    footer {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 18px;
+      border-top: 1px solid #d8d8d8;
+      padding-top: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      font-size: 8.5px;
+      color: #62676f;
+    }
+
+    footer div:nth-child(2) {
+      text-align: center;
+    }
+
+    footer div:nth-child(3) {
+      text-align: right;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        box-shadow: none;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="content">
+      <header>
+        <div class="logo" aria-label="Prefeitura de Formosa">
+          <div class="tree"></div>
+          <div class="small">PREFEITURA DE</div>
+          <div class="city">FORMOSA</div>
+        </div>
+
+        <div class="school-info">
+          <div>MUNICÍPIO DE FORMOSA</div>
+          <div>SEC. MUNICIPAL DE EDUCAÇÃO</div>
+          <div>ESCOLA MUNICIPAL WALDA MIRANDA DE PAIVA</div>
+          <div style="font-weight: 500; text-transform: none;">Tel.: (61) 99850-1452 - Leis: LEI CRIAÇÃO: Nº 112 - JGP DE 17/11/1998- INEP:</div>
+          <div style="font-weight: 500;">52082750</div>
+        </div>
+      </header>
+
+      <h1>Advertência Escolar</h1>
+
+      <section class="student-grid">
+        <div><span class="label">Discente:</span> ARTHUR OLIVEIRA FARIAS</div>
+        <div><span class="label">Série:</span> 7º ANO</div>
+        <div><span class="label">Turma:</span> 7º ANO B</div>
+        <div><span class="label">Turno:</span> Matutino</div>
+      </section>
+
+      <section class="paragraph">
+        Fica o discente citado acima <strong>ADVERTIDO</strong> a partir desta data conforme <strong>REGIMENTO INTERNO</strong> desta Instituição Educacional, conforme Art. 283, INCISO II e este documento será adicionado à pasta do aluno.
+      </section>
+
+      <section class="details">
+        <p><strong>Motivos:</strong> desrespeitar o colega;</p>
+        <p><strong>Obs:</strong> O aluno recebeu esta advertência por utilizar palavras ofensivas e xingamentos contra um colega durante a aula.</p>
+      </section>
+
+      <section>
+        <div class="sign-title">Assinaturas:</div>
+
+        <div class="signatures">
+          <div class="signature-line">
+            <div class="name">ARTHUR OLIVEIRA FARIAS</div>
+            <div class="doc">718.305.921-90</div>
+            <div class="role">Aluno(a)</div>
+          </div>
+
+          <div class="signature-line">
+            <div class="name">LEILA FERREIRA DE FARIAS</div>
+            <div class="role">Responsável(a)</div>
+          </div>
+
+          <div class="signature-line">
+            <div class="name">Professor(a)</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="coordinator">COORDENADOR(A):</div>
+      <div class="date">segunda-feira, 18 de maio de 2026</div>
+    </div>
+
+    <footer>
+      <div>Conti ® e-Assinatura: nHcz5Z58teX</div>
+      <div>Emitido em 18/05/2026 10:35 por 07549227152</div>
+      <div>Página 1 de 1</div>
+    </footer>
+  </main>
+</body>
+</html>
