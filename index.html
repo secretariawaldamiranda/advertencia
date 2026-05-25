@@ -131,30 +131,6 @@
       letter-spacing: .2px;
     }
 
-    .csv-panel {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 28px;
-      font-size: 12px;
-    }
-
-    .csv-label {
-      font-weight: 700;
-    }
-
-    #alunoSelect {
-      font-size: 12px;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    #alunoSelect {
-      flex: 1;
-      border: 1px solid #bdbdbd;
-      padding: 4px 6px;
-      border-radius: 4px;
-    }
-
     .student-grid {
       display: grid;
       grid-template-columns: 1.2fr .95fr .85fr;
@@ -408,14 +384,6 @@
 
       <h1>Advertência Escolar</h1>
 
-      <section class="csv-panel">
-        
-
-        <select id="alunoSelect">
-          <option value="">Selecione um aluno</option>
-        </select>
-      </section>
-
       <section class="student-grid">
         <div>
           <span class="label">Discente:</span>
@@ -424,17 +392,17 @@
 
         <div>
           <span class="label">Série:</span>
-          <input type="text" id="serieInput" placeholder="Ex: 7º ANO" />
+          <input type="text" placeholder="Ex: 7º ANO" />
         </div>
 
         <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
           <span class="label">Turma:</span>
-          <input type="text" id="turmaInput" placeholder="Ex: 7º ANO B" />
+          <input type="text" placeholder="Ex: 7º ANO B" />
         </div>
 
         <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
           <span class="label">Turno:</span>
-          <input type="text" id="turnoInput" placeholder="Ex: Matutino" />
+          <input type="text" placeholder="Ex: Matutino" />
         </div>
       </section>
 
@@ -513,11 +481,6 @@
     ];
 
     const motivoSelect = document.getElementById("motivoSelect");
-    const alunoSelect = document.getElementById("alunoSelect");
-    const serieInput = document.getElementById("serieInput");
-    const turmaInput = document.getElementById("turmaInput");
-    const turnoInput = document.getElementById("turnoInput");
-    const responsavelInput = document.getElementById("responsavelInput");
     const discenteInput = document.getElementById("discenteInput");
     const assinaturaAluno = document.getElementById("assinaturaAluno");
     const incisoSelecionado = document.getElementById("incisoSelecionado");
@@ -560,55 +523,6 @@
     }
 
     atualizarDatas();
-
-    let alunosCSV = [];
-
-    fetch("advertencia.csv")
-      .then(response => response.text())
-      .then(texto => {
-        const linhas = texto.split(/
-?
-/).filter(l => l.trim() !== "");
-
-        alunosCSV = [];
-        alunoSelect.innerHTML = '<option value="">Selecione um aluno</option>';
-
-        linhas.slice(1).forEach((linha, index) => {
-          const [discente, responsavel, turno, serie, turma] = linha.split(";");
-
-          if (!discente) return;
-
-          const aluno = {
-            discente: discente?.trim() || "",
-            responsavel: responsavel?.trim() || "",
-            turno: turno?.trim() || "",
-            serie: serie?.trim() || "",
-            turma: turma?.trim() || ""
-          };
-
-          alunosCSV.push(aluno);
-
-          const option = document.createElement("option");
-          option.value = index;
-          option.textContent = aluno.discente;
-          alunoSelect.appendChild(option);
-        });
-      })
-      .catch(error => {
-        console.error("Erro ao carregar CSV:", error);
-      });
-
-    alunoSelect.addEventListener("change", () => {
-      const aluno = alunosCSV[alunoSelect.value];
-      if (!aluno) return;
-
-      discenteInput.value = aluno.discente;
-      assinaturaAluno.textContent = aluno.discente;
-      serieInput.value = aluno.serie;
-      turmaInput.value = aluno.turma;
-      turnoInput.value = aluno.turno;
-      responsavelInput.value = aluno.responsavel;
-    });
 
     motivoSelect.addEventListener("change", () => {
       if (motivoSelect.value === "") {
