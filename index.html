@@ -42,13 +42,8 @@
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 12% 5%, rgba(0,0,0,.05) 0 1px, transparent 2px),
-        radial-gradient(circle at 91% 8%, rgba(0,0,0,.07) 0 1px, transparent 2px),
-        radial-gradient(circle at 8% 84%, rgba(0,0,0,.05) 0 1px, transparent 2px),
-        linear-gradient(90deg, transparent 0 98%, rgba(0,0,0,.06));
       pointer-events: none;
-      opacity: .55;
+      opacity: 0;
     }
 
     .content {
@@ -69,17 +64,24 @@
 
     .logo {
       position: absolute;
-      left: -40px;
-      top: -34px;
-      width: 145px;
+      left: -28px;
+      top: -22px;
+      width: 175px;
       text-align: center;
+      background: transparent;
+      overflow: visible;
     }
 
     .logo img {
-      width: 145px;
+      width: 100%;
       height: auto;
       display: block;
       object-fit: contain;
+      background: transparent;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      mix-blend-mode: multiply;
     }
 
     .school-info div {
@@ -103,7 +105,8 @@
       margin: 8px 0 62px;
     }
 
-    .student-grid input {
+    .student-grid input,
+    .student-grid select {
       border: none;
       outline: none;
       font-size: 12px;
@@ -114,6 +117,15 @@
       font-family: Arial, Helvetica, sans-serif;
       display: inline-block;
       vertical-align: middle;
+    }
+
+    .student-grid input::placeholder {
+      color: #9a9a9a;
+      font-style: italic;
+    }
+
+    .student-grid select {
+      min-width: 360px;
     }
 
     .student-grid input::placeholder {
@@ -346,22 +358,24 @@
       <section class="student-grid">
         <div>
           <span class="label">Discente:</span>
-          <input type="text" id="discenteInput" placeholder="Digite o nome do discente" />
+          <select id="discenteSelect">
+            <option value="">Carregando alunos...</option>
+          </select>
         </div>
 
         <div>
           <span class="label">Série:</span>
-          <input type="text" placeholder="Ex: 7º ANO" />
+          <input type="text" id="serieInput" placeholder="Ex: 7º ANO" />
         </div>
 
         <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
           <span class="label">Turma:</span>
-          <input type="text" placeholder="Ex: 7º ANO B" />
+          <input type="text" id="turmaInput" placeholder="Ex: 7º ANO B" />
         </div>
 
         <div style="display:flex; align-items:center; gap:4px; white-space:nowrap;">
           <span class="label">Turno:</span>
-          <input type="text" placeholder="Ex: Matutino" />
+          <input type="text" id="turnoInput" placeholder="Ex: Matutino" />
         </div>
       </section>
 
@@ -536,7 +550,11 @@
     ];
 
     const motivoSelect = document.getElementById("motivoSelect");
-    const discenteInput = document.getElementById("discenteInput");
+    const discenteSelect = document.getElementById("discenteSelect");
+    const serieInput = document.getElementById("serieInput");
+    const turmaInput = document.getElementById("turmaInput");
+    const turnoInput = document.getElementById("turnoInput");
+    const responsavelInput = document.getElementById("responsavelInput");
     const assinaturaAluno = document.getElementById("assinaturaAluno");
     const incisoSelecionado = document.getElementById("incisoSelecionado");
     const observacao = document.getElementById("observacao");
@@ -550,10 +568,81 @@
       motivoSelect.appendChild(option);
     });
 
-    discenteInput.addEventListener("input", () => {
-      const nome = discenteInput.value.trim();
-      assinaturaAluno.textContent = nome || "______________________";
+    let alunosCSV = [];
+
+    function separarCSV(linha) {
+      return linha.split(";").map(campo => campo.trim().replace(/^"|"$/g, ""));
+    }
+
+    function limparAluno() {
+      serieInput.value = "";
+      turmaInput.value = "";
+      turnoInput.value = "";
+      responsavelInput.value = "";
+      assinaturaAluno.textContent = "______________________";
+    }
+
+    function preencherAluno(aluno) {
+      serieInput.value = aluno.serie || "";
+      turmaInput.value = aluno.turma || "";
+      turnoInput.value = aluno.turno || "";
+      responsavelInput.value = aluno.responsavel || "";
+      assinaturaAluno.textContent = aluno.discente || "______________________";
+    }
+
+    function montarListaDeAlunos() {
+      discenteSelect.innerHTML = '<option value="">Selecione o aluno</option>';
+
+      alunosCSV.forEach((aluno, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = aluno.discente;
+        discenteSelect.appendChild(option);
+      });
+    }
+
+    async function carregarCSV() {
+      try {
+        const resposta = await fetch("advertencia.csv");
+        if (!resposta.ok) throw new Error("Não encontrei o arquivo advertencia.csv na mesma pasta do index.html.");
+
+        const buffer = await resposta.arrayBuffer();
+        const texto = new TextDecoder("iso-8859-1").decode(buffer);
+        const linhas = texto.split(/
+?
+/).filter(linha => linha.trim() !== "");
+
+        alunosCSV = linhas.slice(1).map(linha => {
+          const [discente, responsavel, turno, serie, turma] = separarCSV(linha);
+
+          return {
+            discente: discente || "",
+            responsavel: responsavel || "",
+            turno: turno || "",
+            serie: serie || "",
+            turma: turma || ""
+          };
+        }).filter(aluno => aluno.discente);
+
+        montarListaDeAlunos();
+      } catch (erro) {
+        console.error(erro);
+        discenteSelect.innerHTML = '<option value="">CSV não encontrado</option>';
+      }
+    }
+
+    discenteSelect.addEventListener("change", () => {
+      const aluno = alunosCSV[discenteSelect.value];
+
+      if (!aluno) {
+        limparAluno();
+        return;
+      }
+
+      preencherAluno(aluno);
     });
+
+    carregarCSV();
 
     function atualizarDatas() {
       const agora = new Date();
