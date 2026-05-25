@@ -298,13 +298,42 @@
       text-align: right;
     }
 
+    .print-button {
+      position: fixed;
+      right: 24px;
+      top: 24px;
+      border: none;
+      background: #2f6fed;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(0,0,0,.15);
+      transition: .2s ease;
+      z-index: 100;
+    }
+
+    .print-button:hover {
+      transform: translateY(-1px);
+      background: #1d5ddd;
+    }
+
     @media print {
+      .print-button {
+        display: none;
+      }
+
       body { padding: 0; background: #fff; }
       .page { width: 210mm; min-height: 297mm; box-shadow: none; margin: 0; }
     }
   </style>
 </head>
 <body>
+  <button class="print-button" onclick="window.print()">
+    🖨️ Imprimir
+  </button>
   <main class="page">
     <div class="content">
       <header>
