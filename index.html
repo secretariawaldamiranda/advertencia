@@ -70,52 +70,16 @@
     .logo {
       position: absolute;
       left: -40px;
-      top: -22px;
-      width: 118px;
+      top: -34px;
+      width: 145px;
       text-align: center;
-      font-weight: 700;
-      color: var(--blue);
-      line-height: .95;
     }
 
-    .tree {
-      width: 78px;
-      height: 42px;
-      margin: 0 auto 4px;
-      position: relative;
-    }
-
-    .tree::before {
-      content: "";
-      position: absolute;
-      left: 18px;
-      top: 4px;
-      width: 46px;
-      height: 24px;
-      background: var(--green);
-      border-radius: 50% 55% 48% 45%;
-      box-shadow: -18px 8px 0 -3px var(--green), 17px 9px 0 -5px var(--green);
-    }
-
-    .tree::after {
-      content: "";
-      position: absolute;
-      left: 39px;
-      top: 25px;
-      width: 7px;
-      height: 17px;
-      background: #7c8b45;
-      border-radius: 2px;
-    }
-
-    .logo .small {
-      font-size: 8px;
-      letter-spacing: .2px;
-    }
-
-    .logo .city {
-      font-size: 20px;
-      letter-spacing: .3px;
+    .logo img {
+      width: 145px;
+      height: auto;
+      display: block;
+      object-fit: contain;
     }
 
     .school-info div {
@@ -365,9 +329,7 @@
     <div class="content">
       <header>
         <div class="logo" aria-label="Prefeitura de Formosa">
-          <div class="tree"></div>
-          <div class="small">PREFEITURA DE</div>
-          <div class="city">FORMOSA</div>
+          <img src="logo-formosa.png" alt="Prefeitura de Formosa" />
         </div>
 
         <div class="school-info">
@@ -451,30 +413,126 @@
   </main>
   <script>
     const motivosAdvertencia = [
-      { inciso: "I", motivo: "negligenciar ou descumprir qualquer ordem escolar" },
-      { inciso: "II", motivo: "desrespeitar os colegas, os professores e os demais funcionários da instituição" },
-      { inciso: "III", motivo: "retirar-se do espaço escolar sem a permissão/anuência do Coordenador Pedagógico ou do Gestor" },
-      { inciso: "IV", motivo: "participar das aulas/atividades escolares sem o uniforme escolar, salvo se comprovada a falta de condições financeiras para a aquisição do mesmo" },
-      { inciso: "V", motivo: "simular doença para esquivar-se do cumprimento das suas obrigações" },
-      { inciso: "VI", motivo: "usar aparelhos eletrônicos portáteis no espaço escolar, sem fins educacionais, salvo se autorizado pelo professor, no processo de ensino-aprendizagem" },
-      { inciso: "VII", motivo: "faltar à verdade" },
-      { inciso: "VIII", motivo: "ingressar na sala de aula, ou sair dela, sem a permissão do professor" },
-      { inciso: "IX", motivo: "promover ações que causem a desordem no contexto escolar" },
-      { inciso: "X", motivo: "portar armas, drogas, bebidas alcoólicas, artefatos explosivos ou qualquer substância e objeto que ofereça riscos à sua integridade física e a outros" },
-      { inciso: "XI", motivo: "usar bebida alcoólica, vender, comprar ou consumir drogas, e fumar no espaço escolar" },
-      { inciso: "XII", motivo: "entreter-se com atividades/afazeres alheios às atividades escolares" },
-      { inciso: "XIII", motivo: "participar de brincadeiras e jogos, ou desenvolver práticas que estimulem a violência, o ódio, a discriminação, o preconceito, o bullying, o suicídio, dentre outras práticas perigosas e discriminatórias" },
-      { inciso: "XIV", motivo: "extraviar ou danificar objetos pertencentes à instituição" },
-      { inciso: "XV", motivo: "ingressar nas dependências escolares de acesso restrito, salvo se autorizado" },
-      { inciso: "XVI", motivo: "causar danos ao patrimônio escolar" },
-      { inciso: "XVII", motivo: "difamar a instituição" },
-      { inciso: "XVIII", motivo: "utilizar computadores ou outros equipamentos/dispositivos de propriedade da escola, sem a autorização da autoridade competente" },
-      { inciso: "XIX", motivo: "comportar-se de maneira a perturbar o processo educativo, dentro ou fora da sala de aula" },
-      { inciso: "XX", motivo: "comparecer à escola sob efeito de substâncias nocivas à saúde e à convivência social" },
-      { inciso: "XXI", motivo: "apresentar qualquer conduta ofensiva ou agressiva às pessoas, e inadequada ao processo de ensino-aprendizagem" },
-      { inciso: "XXII", motivo: "usar boné, touca, capuz e máscara de fantasia/personagens nas dependências da instituição de ensino" },
-      { inciso: "XXIII", motivo: "namorar e/ou praticar atos sexuais no interior da instituição" },
-      { inciso: "XXIV", motivo: "frequentar a escola trajando roupas curtas e muito decotadas, ou sem alguma das vestimentas, como por exemplo, sem camisa/camiseta, etc." }
+      {
+        inciso: "I",
+        motivo: "negligenciar ou descumprir qualquer ordem escolar",
+        obs: "O aluno deixou de cumprir orientações e normas estabelecidas pela instituição escolar, mesmo após orientação prévia da equipe pedagógica."
+      },
+      {
+        inciso: "II",
+        motivo: "desrespeitar os colegas, os professores e os demais funcionários da instituição",
+        obs: "O aluno apresentou comportamento desrespeitoso direcionado a colegas e/ou servidores da unidade escolar durante o período de aula."
+      },
+      {
+        inciso: "III",
+        motivo: "retirar-se do espaço escolar sem a permissão/anuência do Coordenador Pedagógico ou do Gestor",
+        obs: "O aluno saiu do ambiente escolar sem autorização prévia da coordenação ou da gestão da escola."
+      },
+      {
+        inciso: "IV",
+        motivo: "participar das aulas/atividades escolares sem o uniforme escolar",
+        obs: "O aluno compareceu à instituição sem o uso adequado do uniforme escolar exigido pela unidade."
+      },
+      {
+        inciso: "V",
+        motivo: "simular doença para esquivar-se do cumprimento das suas obrigações",
+        obs: "Foi identificado comportamento incompatível com a justificativa apresentada para ausência das atividades escolares."
+      },
+      {
+        inciso: "VI",
+        motivo: "usar aparelhos eletrônicos portáteis no espaço escolar sem fins educacionais",
+        obs: "O aluno utilizou aparelho eletrônico durante o horário de aula sem autorização do professor responsável."
+      },
+      {
+        inciso: "VII",
+        motivo: "faltar à verdade",
+        obs: "O aluno apresentou informações inverídicas relacionadas aos acontecimentos escolares."
+      },
+      {
+        inciso: "VIII",
+        motivo: "ingressar na sala de aula, ou sair dela, sem a permissão do professor",
+        obs: "O aluno entrou e/ou saiu da sala de aula sem autorização do professor responsável."
+      },
+      {
+        inciso: "IX",
+        motivo: "promover ações que causem a desordem no contexto escolar",
+        obs: "O aluno participou de atitudes que prejudicaram a organização e o bom andamento das atividades escolares."
+      },
+      {
+        inciso: "X",
+        motivo: "portar armas, drogas, bebidas alcoólicas, artefatos explosivos ou substâncias perigosas",
+        obs: "Foi identificado porte de material inadequado e proibido nas dependências escolares."
+      },
+      {
+        inciso: "XI",
+        motivo: "usar bebida alcoólica, vender, comprar ou consumir drogas, e fumar no espaço escolar",
+        obs: "O aluno foi identificado praticando conduta inadequada relacionada ao uso de substâncias proibidas no ambiente escolar."
+      },
+      {
+        inciso: "XII",
+        motivo: "entreter-se com atividades/afazeres alheios às atividades escolares",
+        obs: "O aluno permaneceu realizando atividades sem relação com o conteúdo e as orientações pedagógicas propostas em aula."
+      },
+      {
+        inciso: "XIII",
+        motivo: "participar de brincadeiras e jogos que estimulem violência, preconceito ou bullying",
+        obs: "O aluno participou de atitudes inadequadas envolvendo brincadeiras ofensivas e comportamento incompatível com a convivência escolar saudável."
+      },
+      {
+        inciso: "XIV",
+        motivo: "extraviar ou danificar objetos pertencentes à instituição",
+        obs: "Foi constatado dano e/ou desaparecimento de objeto pertencente à instituição escolar."
+      },
+      {
+        inciso: "XV",
+        motivo: "ingressar nas dependências escolares de acesso restrito sem autorização",
+        obs: "O aluno acessou área restrita da instituição sem autorização prévia da equipe responsável."
+      },
+      {
+        inciso: "XVI",
+        motivo: "causar danos ao patrimônio escolar",
+        obs: "O aluno provocou danos ao patrimônio da unidade escolar durante sua permanência na instituição."
+      },
+      {
+        inciso: "XVII",
+        motivo: "difamar a instituição",
+        obs: "O aluno realizou comentários e atitudes inadequadas que atingem a imagem da instituição escolar."
+      },
+      {
+        inciso: "XVIII",
+        motivo: "utilizar computadores ou equipamentos da escola sem autorização",
+        obs: "O aluno utilizou equipamentos pertencentes à escola sem autorização da equipe responsável."
+      },
+      {
+        inciso: "XIX",
+        motivo: "comportar-se de maneira a perturbar o processo educativo",
+        obs: "O comportamento apresentado pelo aluno prejudicou o desenvolvimento das atividades pedagógicas em sala de aula."
+      },
+      {
+        inciso: "XX",
+        motivo: "comparecer à escola sob efeito de substâncias nocivas",
+        obs: "O aluno apresentou comportamento incompatível com as normas escolares relacionado ao uso de substâncias inadequadas."
+      },
+      {
+        inciso: "XXI",
+        motivo: "apresentar conduta ofensiva ou agressiva às pessoas",
+        obs: "O aluno apresentou atitude ofensiva/agressiva durante a convivência escolar."
+      },
+      {
+        inciso: "XXII",
+        motivo: "usar boné, touca, capuz e máscara de fantasia/personagens",
+        obs: "O aluno permaneceu utilizando acessórios não permitidos nas dependências da instituição de ensino."
+      },
+      {
+        inciso: "XXIII",
+        motivo: "namorar e/ou praticar atos sexuais no interior da instituição",
+        obs: "O aluno apresentou comportamento inadequado ao ambiente escolar relacionado à convivência afetiva."
+      },
+      {
+        inciso: "XXIV",
+        motivo: "frequentar a escola com roupas inadequadas",
+        obs: "O aluno compareceu à instituição utilizando vestimenta inadequada ao ambiente escolar."
+      }
     ];
 
     const motivoSelect = document.getElementById("motivoSelect");
@@ -529,7 +587,7 @@
 
       const item = motivosAdvertencia[motivoSelect.value];
       incisoSelecionado.textContent = item.inciso;
-      observacao.value = `O aluno recebeu esta advertência por ${item.motivo}.`;
+      observacao.value = item.obs;
     });
   </script>
 </body>
