@@ -348,11 +348,8 @@
 
     .print-button { background: #2f6fed; }
     .history-button { background: #454f5b; }
-    .today-button { background: #257a4f; }
-
     .print-button:hover,
-    .history-button:hover,
-    .today-button:hover {
+    .history-button:hover {
       transform: translateY(-1px);
       filter: brightness(.95);
     }
@@ -593,7 +590,6 @@
       .action-buttons,
       .print-button,
       .history-button,
-      .today-button,
       .history-panel,
       .save-toast,
       .suggestions {
@@ -618,9 +614,6 @@
     </button>
     <button class="history-button" onclick="alternarHistorico()">
       📚 Histórico
-    </button>
-    <button class="history-button today-button" onclick="usarDataDeHoje()">
-      📅 Usar data de hoje
     </button>
   </div>
 
@@ -1013,12 +1006,6 @@
       emitidoEm.textContent = `Emitido em ${dataHora}`;
     }
 
-    function usarDataDeHoje() {
-      dataAtual.textContent = obterDataCompleta();
-      atualizarDataDeEmissao();
-      mostrarMensagem("Data da advertência atualizada para hoje.");
-    }
-
     function atualizarDatas() {
       dataAtual.textContent = obterDataCompleta();
       atualizarDataDeEmissao();
@@ -1031,6 +1018,8 @@
       motivoSelect.appendChild(option);
     });
 
+    let ultimaObservacaoSugerida = observacao.value.trim();
+
     motivoSelect.addEventListener("change", () => {
       if (motivoSelect.value === "") {
         incisoSelecionado.textContent = "___";
@@ -1039,7 +1028,14 @@
 
       const item = motivosAdvertencia[motivoSelect.value];
       incisoSelecionado.textContent = item.inciso;
-      observacao.value = item.obs;
+
+      const observacaoAtual = observacao.value.trim();
+      const aindaEhTextoAutomatico = !observacaoAtual || observacaoAtual === ultimaObservacaoSugerida;
+
+      if (aindaEhTextoAutomatico) {
+        observacao.value = item.obs;
+        ultimaObservacaoSugerida = item.obs.trim();
+      }
     });
 
 
