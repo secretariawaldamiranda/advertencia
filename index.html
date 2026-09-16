@@ -286,6 +286,19 @@
       font-weight: 700;
     }
 
+    .date[contenteditable="true"] {
+      border-radius: 5px;
+      outline: 1px dashed transparent;
+      padding: 4px 6px;
+      cursor: text;
+    }
+
+    .date[contenteditable="true"]:hover,
+    .date[contenteditable="true"]:focus {
+      outline-color: #7d98c9;
+      background: #f5f8ff;
+    }
+
     footer {
       position: absolute;
       left: 24px;
@@ -335,9 +348,11 @@
 
     .print-button { background: #2f6fed; }
     .history-button { background: #454f5b; }
+    .today-button { background: #257a4f; }
 
     .print-button:hover,
-    .history-button:hover {
+    .history-button:hover,
+    .today-button:hover {
       transform: translateY(-1px);
       filter: brightness(.95);
     }
@@ -578,6 +593,7 @@
       .action-buttons,
       .print-button,
       .history-button,
+      .today-button,
       .history-panel,
       .save-toast,
       .suggestions {
@@ -602,6 +618,9 @@
     </button>
     <button class="history-button" onclick="alternarHistorico()">
       📚 Histórico
+    </button>
+    <button class="history-button today-button" onclick="usarDataDeHoje()">
+      📅 Usar data de hoje
     </button>
   </div>
 
@@ -704,7 +723,7 @@
         </div>
       </section>
 
-      <div class="date" id="dataAtual"></div>
+      <div class="date" id="dataAtual" contenteditable="true" role="textbox" aria-label="Data da advertência" title="Clique para alterar a data manualmente" spellcheck="false"></div>
     </div>
 
     <footer>
@@ -971,15 +990,17 @@
       setTimeout(fecharSugestoes, 120);
     });
 
-    function atualizarDatas() {
-      const agora = new Date();
-
-      const dataCompleta = agora.toLocaleDateString("pt-BR", {
+    function obterDataCompleta(data = new Date()) {
+      return data.toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "numeric",
         month: "long",
         year: "numeric"
       });
+    }
+
+    function atualizarDataDeEmissao() {
+      const agora = new Date();
 
       const dataHora = agora.toLocaleString("pt-BR", {
         day: "2-digit",
@@ -989,8 +1010,18 @@
         minute: "2-digit"
       });
 
-      dataAtual.textContent = dataCompleta;
       emitidoEm.textContent = `Emitido em ${dataHora}`;
+    }
+
+    function usarDataDeHoje() {
+      dataAtual.textContent = obterDataCompleta();
+      atualizarDataDeEmissao();
+      mostrarMensagem("Data da advertência atualizada para hoje.");
+    }
+
+    function atualizarDatas() {
+      dataAtual.textContent = obterDataCompleta();
+      atualizarDataDeEmissao();
     }
 
     motivosAdvertencia.forEach((item, index) => {
@@ -1077,7 +1108,7 @@
     }
 
     function imprimirESalvar() {
-      atualizarDatas();
+      atualizarDataDeEmissao();
       const registro = criarRegistroAdvertencia("impressao");
       salvarRegistroAdvertencia(registro);
       window.print();
