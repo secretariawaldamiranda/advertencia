@@ -432,7 +432,7 @@
       padding: 8px 0;
     }
 
-    .history-student {
+    .history-date {
       border: 1px solid #e2e2e2;
       border-radius: 13px;
       margin-bottom: 10px;
@@ -440,7 +440,7 @@
       overflow: hidden;
     }
 
-    .history-student-summary {
+    .history-date-summary {
       width: 100%;
       border: none;
       background: #ffffff;
@@ -453,11 +453,11 @@
       text-align: left;
     }
 
-    .history-student-summary:hover {
+    .history-date-summary:hover {
       background: #f6f8ff;
     }
 
-    .history-student-name {
+    .history-date-name {
       font-weight: 800;
       font-size: 12px;
       text-transform: uppercase;
@@ -465,7 +465,7 @@
       line-height: 1.35;
     }
 
-    .history-student-meta {
+    .history-date-meta {
       display: block;
       margin-top: 3px;
       font-size: 10.5px;
@@ -484,7 +484,7 @@
       font-weight: 800;
     }
 
-    .history-student-details {
+    .history-date-details {
       border-top: 1px solid #eeeeee;
       padding: 10px 12px 12px;
       background: #fbfbfc;
@@ -619,7 +619,7 @@
 
   <aside id="historicoPainel" class="history-panel" aria-label="Histórico de advertências salvas">
     <div class="history-header">
-      <strong>Histórico por aluno</strong>
+      <strong>Histórico por data</strong>
       <button class="close-history" type="button" onclick="fecharHistorico()" aria-label="Fechar histórico">×</button>
     </div>
 
@@ -773,7 +773,7 @@
     const LIMITE_HISTORICO = 500;
 
     let alunosCSV = [];
-    let alunosAbertosNoHistorico = new Set();
+    let datasAbertasNoHistorico = new Set();
 
     function normalizarTexto(texto) {
       return String(texto || "")
@@ -1166,32 +1166,41 @@
       return (registro.discente || registro.assinaturaAluno || "Advertência sem nome").trim() || "Advertência sem nome";
     }
 
-    function agruparHistoricoPorAluno(historico) {
+    function agruparHistoricoPorData(historico) {
       const grupos = new Map();
+      const ordenados = [...historico].sort((a, b) => {
+        const tempoA = Date.parse(a.salvoEmISO) || 0;
+        const tempoB = Date.parse(b.salvoEmISO) || 0;
+        return tempoB - tempoA;
+      });
 
-      historico.forEach((registro) => {
-        const nome = obterNomeAlunoHistorico(registro);
-        const chave = normalizarTexto(nome) || "ADVERTENCIA SEM NOME";
+      ordenados.forEach((registro) => {
+        const data = new Date(registro.salvoEmISO);
+        const dataValida = !Number.isNaN(data.getTime());
+        const chave = dataValida
+          ? `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`
+          : "sem-data";
+        const nome = dataValida ? data.toLocaleDateString("pt-BR") : "Data não identificada";
 
         if (!grupos.has(chave)) {
-          grupos.set(chave, {
-            chave,
-            nome,
-            registros: []
-          });
+          grupos.set(chave, { chave, nome, registros: [] });
         }
 
         grupos.get(chave).registros.push(registro);
       });
 
-      return Array.from(grupos.values()).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+      return Array.from(grupos.values()).sort((a, b) => {
+        if (a.chave === "sem-data") return 1;
+        if (b.chave === "sem-data") return -1;
+        return b.chave.localeCompare(a.chave);
+      });
     }
 
-    function alternarAlunoNoHistorico(chaveAluno) {
-      if (alunosAbertosNoHistorico.has(chaveAluno)) {
-        alunosAbertosNoHistorico.delete(chaveAluno);
+    function alternarDataNoHistorico(chaveData) {
+      if (datasAbertasNoHistorico.has(chaveData)) {
+        datasAbertasNoHistorico.delete(chaveData);
       } else {
-        alunosAbertosNoHistorico.add(chaveAluno);
+        datasAbertasNoHistorico.add(chaveData);
       }
       renderizarHistorico();
     }
@@ -1208,33 +1217,32 @@
         return;
       }
 
-      const grupos = agruparHistoricoPorAluno(historico);
+      const grupos = agruparHistoricoPorData(historico);
       const resumo = document.createElement("div");
       resumo.className = "history-empty";
-      resumo.textContent = `${grupos.length} aluno(s) no histórico • ${pluralAdvertencias(historico.length)} salva(s). Clique no nome do aluno para ver as advertências dele.`;
+      resumo.textContent = `${pluralAdvertencias(historico.length)} salva(s). Datas mais recentes primeiro. Clique na data para ver as advertências.`;
       listaHistorico.appendChild(resumo);
 
       grupos.forEach((grupo) => {
-        const alunoAberto = alunosAbertosNoHistorico.has(grupo.chave);
-        const ultimoRegistro = grupo.registros[0];
+        const dataAberta = datasAbertasNoHistorico.has(grupo.chave);
 
-        const itemAluno = document.createElement("div");
-        itemAluno.className = "history-student";
+        const itemData = document.createElement("div");
+        itemData.className = "history-date";
 
         const cabecalho = document.createElement("button");
         cabecalho.type = "button";
-        cabecalho.className = "history-student-summary";
-        cabecalho.setAttribute("aria-expanded", alunoAberto ? "true" : "false");
-        cabecalho.addEventListener("click", () => alternarAlunoNoHistorico(grupo.chave));
+        cabecalho.className = "history-date-summary";
+        cabecalho.setAttribute("aria-expanded", dataAberta ? "true" : "false");
+        cabecalho.addEventListener("click", () => alternarDataNoHistorico(grupo.chave));
 
         const nome = document.createElement("span");
-        nome.className = "history-student-name";
+        nome.className = "history-date-name";
         nome.textContent = grupo.nome;
 
-        const metaAluno = document.createElement("span");
-        metaAluno.className = "history-student-meta";
-        metaAluno.textContent = `Última advertência: ${formatarDataSalvamento(ultimoRegistro.salvoEmISO)}${alunoAberto ? " • clique para fechar" : " • clique para abrir"}`;
-        nome.appendChild(metaAluno);
+        const metaData = document.createElement("span");
+        metaData.className = "history-date-meta";
+        metaData.textContent = dataAberta ? "Clique para fechar" : "Clique para abrir";
+        nome.appendChild(metaData);
 
         const contador = document.createElement("span");
         contador.className = "history-count-badge";
@@ -1242,19 +1250,19 @@
 
         cabecalho.appendChild(nome);
         cabecalho.appendChild(contador);
-        itemAluno.appendChild(cabecalho);
+        itemData.appendChild(cabecalho);
 
-        if (alunoAberto) {
-          const detalhesAluno = document.createElement("div");
-          detalhesAluno.className = "history-student-details";
+        if (dataAberta) {
+          const detalhesData = document.createElement("div");
+          detalhesData.className = "history-date-details";
 
-          grupo.registros.forEach((registro, index) => {
+          grupo.registros.forEach((registro) => {
             const item = document.createElement("div");
             item.className = "history-record";
 
             const titulo = document.createElement("div");
             titulo.className = "history-title";
-            titulo.textContent = `Advertência ${grupo.registros.length - index}`;
+            titulo.textContent = obterNomeAlunoHistorico(registro);
 
             const meta = document.createElement("div");
             meta.className = "history-meta";
@@ -1274,13 +1282,13 @@
             item.appendChild(meta);
             item.appendChild(motivo);
             item.appendChild(botoes);
-            detalhesAluno.appendChild(item);
+            detalhesData.appendChild(item);
           });
 
-          itemAluno.appendChild(detalhesAluno);
+          itemData.appendChild(detalhesData);
         }
 
-        listaHistorico.appendChild(itemAluno);
+        listaHistorico.appendChild(itemData);
       });
     }
 
